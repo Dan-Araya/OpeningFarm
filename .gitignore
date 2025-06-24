@@ -1,0 +1,10 @@
+# Directorios de dependencias
+node_modules/
+
+# Archivos de build y temporales
+dist/
+build/
+.env
+.DS_Store
+npm-debug.log
+yarn-error.log
