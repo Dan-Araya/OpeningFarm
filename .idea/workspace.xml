@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="156a110b-0d9f-4345-88a3-beadb3a2f249" name="Changes" comment="" />
+    <list default="true" id="156a110b-0d9f-4345-88a3-beadb3a2f249" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/TestBoard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/TestBoard.tsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,6 +22,21 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Dan-Araya&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Dan-Araya/OpeningFarm.git&quot;,
+    &quot;accountId&quot;: &quot;a28e6984-004a-442f-b627-06722c513698&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
@@ -29,6 +48,8 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;last_opened_file_path&quot;: &quot;/home/dan/Escritorio/OpeningFarm/frontend&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -57,7 +78,8 @@
       <workItem from="1750464609870" duration="1533000" />
       <workItem from="1750472244650" duration="10129000" />
       <workItem from="1750527472543" duration="1232000" />
-      <workItem from="1750716860448" duration="7235000" />
+      <workItem from="1750716860448" duration="8476000" />
+      <workItem from="1750798992177" duration="4276000" />
     </task>
     <servers />
   </component>
