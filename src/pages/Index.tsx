@@ -63,12 +63,20 @@ const Index = () => {
   }, []);
 
   const onDrop = useCallback((sourceSquare: string, targetSquare: string): boolean => {
-    let move = null;
-    safeGameMutate((g) => {
-      move = g.move({ from: sourceSquare, to: targetSquare, promotion: "q" });
-    });
-    return move !== null;
-  }, [safeGameMutate]);
+    // Primero verificamos si el movimiento es válido SIN mutar el estado
+    const gameCopy = new Chess(game.fen());
+    const move = gameCopy.move({ from: sourceSquare, to: targetSquare, promotion: "q" });
+
+    // Solo si el movimiento es válido, actualizamos el estado
+    if (move !== null) {
+      safeGameMutate((g) => {
+        g.move({ from: sourceSquare, to: targetSquare, promotion: "q" });
+      });
+      return true;
+    }
+
+    return false;
+  }, [game, safeGameMutate]);
 
   return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
@@ -137,7 +145,7 @@ const Index = () => {
 
           <div className="text-center mt-6">
             <p className="text-slate-400 text-sm">
-            Tamaño del tablero: {boardSize}px | Ancho disponible: {bounds.width}px
+              Tamaño del tablero: {boardSize}px | Ancho disponible: {bounds.width}px
             </p>
           </div>
         </main>
