@@ -133,9 +133,9 @@ const Index = () => {
     // Destacar los movimientos válidos
     validMoves.forEach(square => {
       styles[square] = {
-        backgroundColor: 'rgba(0, 255, 0, 0.4)',
+        backgroundColor: 'rgba(40,165,27,0.8)',
         borderRadius: '50%',
-        border: '2px solid rgba(0, 255, 0, 0.8)'
+        transform: 'scale(0.3)'
       };
     });
 
