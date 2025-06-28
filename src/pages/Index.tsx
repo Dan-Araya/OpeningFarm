@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Crown, User, BookOpen, Trophy, Github, Twitter, RotateCcw } from "lucide-react";
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { Chess } from 'chess.js';
+import { Chess, Square, Move } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
 
 // Hook personalizado para medir el contenedor con tipos correctos
@@ -36,6 +36,8 @@ const useContainerMeasure = <T extends HTMLElement>(): [React.RefObject<T>, { wi
 const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [game, setGame] = useState(new Chess());
+  const [selectedSquare, setSelectedSquare] = useState<Square | null>(null);
+  const [validMoves, setValidMoves] = useState<Square[]>([]);
 
   const [containerRef, bounds] = useContainerMeasure<HTMLDivElement>();
 
@@ -62,7 +64,92 @@ const Index = () => {
     });
   }, []);
 
-  const onDrop = useCallback((sourceSquare: string, targetSquare: string): boolean => {
+  // Función para obtener movimientos válidos desde una casilla
+  const getValidMoves = useCallback((square: Square): Square[] => {
+    const moves = game.moves({ square, verbose: true }) as Move[];
+    return moves.map(move => move.to);
+  }, [game]);
+
+  // Función para manejar clics en casillas
+  const onSquareClick = useCallback((square: Square) => {
+    // Verificamos si estamos haciendo clic en una pieza del turno actual
+    const piece = game.get(square);
+    const isOwnPiece = piece && piece.color === game.turn();
+
+    // Si no hay pieza seleccionada, intentamos seleccionar una pieza
+    if (!selectedSquare) {
+      if (isOwnPiece) {
+        setSelectedSquare(square);
+        setValidMoves(getValidMoves(square));
+      }
+      return;
+    }
+
+    // Si hacemos clic en la misma casilla, deseleccionamos
+    if (selectedSquare === square) {
+      setSelectedSquare(null);
+      setValidMoves([]);
+      return;
+    }
+
+    // Si hacemos clic en otra pieza propia, cambiamos la selección directamente
+    if (isOwnPiece) {
+      setSelectedSquare(square);
+      setValidMoves(getValidMoves(square));
+      return;
+    }
+
+    // Intentamos hacer el movimiento solo si podría ser válido
+    try {
+      const gameCopy = new Chess(game.fen());
+      const move = gameCopy.move({ from: selectedSquare, to: square, promotion: "q" });
+
+      if (move !== null) {
+        // Movimiento válido, actualizamos el estado
+        safeGameMutate((g) => {
+          g.move({ from: selectedSquare, to: square, promotion: "q" });
+        });
+      }
+    } catch (error) {
+      // Si hay un error en el movimiento, simplemente lo ignoramos
+    }
+
+    // En cualquier caso, limpiamos la selección
+    setSelectedSquare(null);
+    setValidMoves([]);
+  }, [game, selectedSquare, getValidMoves, safeGameMutate]);
+
+  // Función para crear los estilos de las casillas
+  const getSquareStyles = useCallback(() => {
+    const styles: { [square: string]: React.CSSProperties } = {};
+
+    // Destacar la casilla seleccionada
+    if (selectedSquare) {
+      styles[selectedSquare] = {
+        backgroundColor: 'rgba(255, 255, 0, 0.4)'
+      };
+    }
+
+    // Destacar los movimientos válidos
+    validMoves.forEach(square => {
+      styles[square] = {
+        backgroundColor: 'rgba(0, 255, 0, 0.4)',
+        borderRadius: '50%',
+        border: '2px solid rgba(0, 255, 0, 0.8)'
+      };
+    });
+
+    return styles;
+  }, [selectedSquare, validMoves]);
+
+  // Función para manejar cuando se empieza a arrastrar una pieza
+  const onPieceDragBegin = useCallback((piece: string, sourceSquare: Square) => {
+    // Al empezar a arrastrar, mostramos los movimientos válidos de esa pieza
+    setSelectedSquare(sourceSquare);
+    setValidMoves(getValidMoves(sourceSquare));
+  }, [getValidMoves]);
+
+  const onDrop = useCallback((sourceSquare: Square, targetSquare: Square): boolean => {
     // Primero verificamos si el movimiento es válido SIN mutar el estado
     const gameCopy = new Chess(game.fen());
     const move = gameCopy.move({ from: sourceSquare, to: targetSquare, promotion: "q" });
@@ -72,6 +159,9 @@ const Index = () => {
       safeGameMutate((g) => {
         g.move({ from: sourceSquare, to: targetSquare, promotion: "q" });
       });
+      // Limpiamos la selección cuando se hace un movimiento por arrastre
+      setSelectedSquare(null);
+      setValidMoves([]);
       return true;
     }
 
@@ -128,6 +218,9 @@ const Index = () => {
                         <Chessboard
                             position={game.fen()}
                             onPieceDrop={onDrop}
+                            onPieceDragBegin={onPieceDragBegin}
+                            onSquareClick={onSquareClick}
+                            customSquareStyles={getSquareStyles()}
                             boardWidth={boardSize}
                         />
                       </div>
